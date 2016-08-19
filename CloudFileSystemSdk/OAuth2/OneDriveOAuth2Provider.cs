@@ -10,15 +10,26 @@ namespace CloudFileSystemSdk.OAuth2
 {
     public class OneDriveOAuth2Provider : IOAuth2Provider
     {
-        public string GetAuthUrl(string clientId, string redirectUri, string responseType = "code", string[] scopes = null, string state = null)
+        private string _clientId;
+        private string _clientSecret;
+        private string _redirectUrl;
+
+        public OneDriveOAuth2Provider(string clientId, string clientSecret, string redirectUrl)
+        {
+            _clientId = clientId;
+            _clientSecret = clientSecret;
+            _redirectUrl = redirectUrl;
+        }
+
+        public string GetAuthUrl(string responseType = "code", string[] scopes = null, string state = null)
         {
             StringBuilder strb = new StringBuilder();
             strb.Append("https://login.live.com/oauth20_authorize.srf");
-            strb.AppendFormat("?client_id={0}", WebUtility.UrlEncode(clientId));
+            strb.AppendFormat("?client_id={0}", WebUtility.UrlEncode(_clientId));
             strb.AppendFormat("&response_type={0}", responseType);
 
-            if (!string.IsNullOrEmpty(redirectUri))
-                strb.AppendFormat("&redirect_uri={0}", WebUtility.UrlEncode(redirectUri));
+            if (!string.IsNullOrEmpty(_redirectUrl))
+                strb.AppendFormat("&redirect_uri={0}", WebUtility.UrlEncode(_redirectUrl));
 
             if (scopes != null)
                 strb.AppendFormat("&scope={0}", WebUtility.UrlEncode(string.Join(" ", scopes)));
@@ -29,7 +40,7 @@ namespace CloudFileSystemSdk.OAuth2
             return strb.ToString();
         }
 
-        public async Task<OAuth2Data> GetAuthData(string clientId, string clientSecret, string callbackUri, string grantType = "authorization_code")
+        public async Task<OAuth2Data> GetAuthData(string callbackUri, string grantType = "authorization_code")
         {
             var queryStrings = HttpUtility.ParseQueryString(callbackUri);
             var message = queryStrings["error_description"] ?? queryStrings["error"];
@@ -44,8 +55,8 @@ namespace CloudFileSystemSdk.OAuth2
             redirectUri = new Uri(redirectUri, redirectUri.AbsolutePath);
 
             var strb = new StringBuilder();
-            strb.AppendFormat("client_id={0}", WebUtility.UrlEncode(clientId));
-            strb.AppendFormat("&client_secret={0}", WebUtility.UrlEncode(clientSecret));
+            strb.AppendFormat("client_id={0}", WebUtility.UrlEncode(_clientId));
+            strb.AppendFormat("&client_secret={0}", WebUtility.UrlEncode(_clientSecret));
             strb.AppendFormat("&redirect_uri={0}", WebUtility.UrlEncode(redirectUri.AbsoluteUri));
             strb.AppendFormat("&code={0}", WebUtility.UrlEncode(code));
             strb.Append("&grant_type=authorization_code");
