@@ -10,6 +10,8 @@ namespace CloudFileSystemSdk.OAuth2
 {
     public class OneDriveOAuth2Provider : IOAuth2Provider
     {
+        private const string OneDriveEndpoint = @"https://api.onedrive.com/v1.0";
+
         private string _clientId;
         private string _clientSecret;
         private string _redirectUrl;
@@ -85,6 +87,16 @@ namespace CloudFileSystemSdk.OAuth2
             {
                 var result = await Utils.ProcessResponse<OneDriveOAuth2Token>(response);
                 return result.ConvertToOAuth2Data();
+            }
+        }
+
+        public async Task<object> ListFolder(string accessToken)
+        {
+            string requestUri = OneDriveEndpoint + "/drives";
+            using (var client = Utils.CreateHttpClient(accessToken))
+            using (var response = await client.GetAsync(requestUri))
+            {
+                return await response.Content.ReadAsStringAsync();
             }
         }
     }
