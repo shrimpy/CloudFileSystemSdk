@@ -29,7 +29,7 @@ namespace CloudFileSystemSdk.OAuth2
             return strb.ToString();
         }
 
-        public async Task<OAuth2Data> GetAuthData(string clientId, string clientSecret, string callbackUri, string grantType = "authorization_code") where T : IOAuth2Data
+        public async Task<OAuth2Data> GetAuthData(string clientId, string clientSecret, string callbackUri, string grantType = "authorization_code")
         {
             var queryStrings = HttpUtility.ParseQueryString(callbackUri);
             var message = queryStrings["error_description"] ?? queryStrings["error"];
