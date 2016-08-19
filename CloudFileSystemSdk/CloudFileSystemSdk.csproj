@@ -37,6 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OAuth2\IOAuth2Data.cs" />
+    <Compile Include="OAuth2\OneDriveModel\OneDriveOAuth2Token.cs" />
+    <Compile Include="OAuth2\Utils.cs" />
     <Compile Include="OAuth2\OAuth2Data.cs" />
     <Compile Include="OAuth2\IOAuth2Provider.cs" />
     <Compile Include="OAuth2\OneDriveOAuth2Provider.cs" />
