@@ -69,5 +69,23 @@ namespace CloudFileSystemSdk.OAuth2
                 return result.ConvertToOAuth2Data();
             }
         }
+
+        public async Task<OAuth2Data> RefreshAccessToken(string refreshToken)
+        {
+            var strb = new StringBuilder();
+            strb.AppendFormat("client_id={0}", WebUtility.UrlEncode(_clientId));
+            strb.AppendFormat("&client_secret={0}", WebUtility.UrlEncode(_clientSecret));
+            strb.AppendFormat("&redirect_uri={0}", WebUtility.UrlEncode(_redirectUrl));
+            strb.AppendFormat("&refresh_token={0}", WebUtility.UrlEncode(refreshToken));
+            strb.Append("&grant_type=refresh_token");
+
+            var content = new StringContent(strb.ToString(), Encoding.UTF8, Utils.FormUrlEncodedMediaType);
+            using (var client = Utils.CreateHttpClient())
+            using (var response = await client.PostAsync("https://login.live.com/oauth20_token.srf", content))
+            {
+                var result = await Utils.ProcessResponse<OneDriveOAuth2Token>(response);
+                return result.ConvertToOAuth2Data();
+            }
+        }
     }
 }

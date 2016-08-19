@@ -6,5 +6,6 @@ namespace CloudFileSystemSdk.OAuth2
     {
         string GetAuthUrl(string responseType, string[] scopes = null, string state = null);
         Task<OAuth2Data> GetAuthData(string callbackUri, string grantType);
+        Task<OAuth2Data> RefreshAccessToken(string refreshToken);
     }
 }
